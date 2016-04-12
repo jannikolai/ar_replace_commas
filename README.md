@@ -1,29 +1,35 @@
-# ArReplaceCommas
+# ar_replace_commas
 
-TODO: Write a gem description
+This gem adds two class methods to ActiveRecord::Base for automatically handling the conversion of strings with commas ("1,203") to the intended value (1.203) on numeric columns.
 
 ## Installation
 
 Add this line to your application's Gemfile:
 
-    gem 'ar_replace_commas'
+    gem 'ar_replace_commas', '0.0.1', :git => 'https://github.com/jannikolai/ar_replace_commas.git'
 
 And then execute:
 
-    $ bundle
-
-Or install it yourself as:
-
-    $ gem install ar_replace_commas
-
+    $ bundle install
+    
 ## Usage
 
-TODO: Write usage instructions here
+__self.replace_commas_from(*columns)__
 
-## Contributing
+Remove commas on the specified column. e.g.
 
-1. Fork it ( http://github.com/<my-github-username>/ar_replace_commas/fork )
-2. Create your feature branch (`git checkout -b my-new-feature`)
-3. Commit your changes (`git commit -am 'Add some feature'`)
-4. Push to the branch (`git push origin my-new-feature`)
-5. Create new Pull Request
+	class Item < ActiveRecord::Base
+	  replace_commas_from :price
+	end
+	Item.new(:price => "1,200").price == 1.2    # true
+
+__self.replace_commas_from_all_numbers__
+
+Remove commas from all numeric columns. e.g.
+
+	class Item < ActiveRecord::Base
+	  replace_commas_from_all_numbers
+	end
+	item = Item.new(:price => "1,200", :weight => "1,872")
+	item.price == 1.2     # true
+	item.weight == 1.872  # true
